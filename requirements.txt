@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+transformers
+torch
+pydantic
+prometheus-fastapi-instrumentator
+pytest
+httpx
+black
+ruff
+pre-commit
+python-dotenv
+huggingface_hub
+wandb
