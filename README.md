@@ -1,124 +1,75 @@
-# HuggingFace AI Production Deployment
+# Hugging Face Production Deployment
 
-## Setup and Run Instructions
+A production-style sentiment analysis application built with FastAPI, Docker, and Hugging Face Transformers.
 
-Follow these steps to run the application locally.
+The application exposes both a REST API and a browser-based web interface for classifying English text into Positive, Neutral, and Negative sentiment.
 
-### 1. Clone the repository
+## Features
 
-``` bash
-git clone https://github.com/matthiasdroth/hf-production-deployment.git
+- FastAPI REST API
+- Browser-based web interface
+- Three-class sentiment analysis
+- Hugging Face Transformers
+- Dockerized deployment
+- Swagger / OpenAPI documentation
+- Automated tests with pytest
+
+## Run with Docker
+
+Build the image:
+
+```bash
+docker build -t hf-production-deployment .
 ```
 
-### 2. Enter the project directory
+Run the container:
 
-``` bash
-cd hf-production-deployment
+```bash
+docker run -p 8000:8000 hf-production-deployment
 ```
 
-### 3. Create a virtual environment
+Open the web interface:
 
-``` bash
-python3 -m venv env
+```text
+http://127.0.0.1:8000/ui
 ```
 
-### 4. Activate the virtual environment
+Open Swagger documentation:
 
-``` bash
-source env/bin/activate
+```text
+http://127.0.0.1:8000/docs
 ```
 
-### 5. Install the dependencies
+## Test the API
 
-``` bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
-
-### 6. Start the FastAPI application
-
-``` bash
-uvicorn app.main:app --reload
-```
-
-The server should start on:
-
-    http://127.0.0.1:8000
-
-## Testing the Application
-
-### 7. Verify that the API is running
-
-Open:
-
-    http://127.0.0.1:8000/
-
-Expected response:
-
-``` json
-{
-  "application": "Production HuggingFace Model API",
-  "status": "running"
-}
-```
-
-### 8. Open the web interface
-
-Navigate to:
-
-    http://127.0.0.1:8000/ui
-
-Enter some text, click **Predict**, and verify that the prediction is
-displayed.
-
-### 9. Test the API directly
-
-``` bash
+```bash
 curl -X POST http://127.0.0.1:8000/predict \
   -H "Content-Type: application/json" \
-  -d '{"text":"I love machine learning."}'
+  -d '{"text":"4+4=8."}'
 ```
 
-Example response:
+Expected label:
 
-``` json
-{
-  "label": "POSITIVE",
-  "score": 0.99
-}
+```text
+NEUTRAL
 ```
 
-### 10. Run the automated tests
+## Run tests
 
-``` bash
-python -m pytest
+```bash
+python -m pytest tests/test_api.py -v
 ```
 
-### 11. Stop the server
+## Model
 
-Press:
+This application uses:
 
-    Ctrl + C
-
-## Project Structure
-
-``` text
-hf-production-deployment/
-├── app/
-├── tests/
-├── Images/
-├── requirements.txt
-├── README.md
-├── Dockerfile
-├── .dockerignore
-└── .gitignore
+```text
+cardiffnlp/twitter-roberta-base-sentiment-latest
 ```
 
-## Notes
+It predicts:
 
--   Always activate the virtual environment before running the
-    application.
--   If port 8000 is already in use, stop the previous Uvicorn process or
-    choose another port.
--   The web interface is available at `/ui`, while `/predict` provides
-    the JSON API.
+- NEGATIVE
+- NEUTRAL
+- POSITIVE
