@@ -1,46 +1,100 @@
-# Hugging Face Production Deployment
+# Getting Started
 
-A production-style sentiment analysis application built with FastAPI, Docker, and Hugging Face Transformers.
+## 1. Prerequisites
 
-The application exposes both a REST API and a browser-based web interface for classifying English text into Positive, Neutral, and Negative sentiment.
+Make sure the following software is installed:
 
-## Features
+- Git
+- Docker Desktop
 
-- FastAPI REST API
-- Browser-based web interface
-- Three-class sentiment analysis
-- Hugging Face Transformers
-- Dockerized deployment
-- Swagger / OpenAPI documentation
-- Automated tests with pytest
+Start Docker Desktop before continuing.
 
-## Run with Docker
+---
 
-Build the image:
+## 2. Clone the Repository
+
+```bash
+git clone https://github.com/matthiasdroth/hf-production-deployment.git
+```
+
+---
+
+## 3. Change into the Project Directory
+
+```bash
+cd hf-production-deployment
+```
+
+---
+
+## 4. Build the Docker Image
 
 ```bash
 docker build -t hf-production-deployment .
 ```
 
-Run the container:
+The first build may take several minutes because Docker needs to download the Python base image and the required Python packages.
+
+---
+
+## 5. Run the Application
 
 ```bash
 docker run -p 8000:8000 hf-production-deployment
 ```
 
-Open the web interface:
+Once the application has started successfully, you should see output similar to:
 
 ```text
+INFO:     Started server process ...
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000
+```
+
+Leave this terminal open while using the application.
+
+---
+
+# Using the Application
+
+## Browser-based User Interface
+
+Open your browser and navigate to
+
+```
 http://127.0.0.1:8000/ui
 ```
 
-Open Swagger documentation:
+Enter a sentence, for example
 
-```text
-http://127.0.0.1:8000/docs
+```
+I am happy.
 ```
 
-## Test the API
+Click **Analyze Sentiment**.
+
+The application returns one of the following sentiment classes:
+
+- POSITIVE
+- NEUTRAL
+- NEGATIVE
+
+Example inputs:
+
+| Input | Expected Output |
+|--------|-----------------|
+| I am happy. | POSITIVE |
+| 4+4=8. | NEUTRAL |
+| I am sad. | NEGATIVE |
+
+---
+
+## REST API
+
+You can also access the application programmatically.
+
+Example request:
 
 ```bash
 curl -X POST http://127.0.0.1:8000/predict \
@@ -48,28 +102,54 @@ curl -X POST http://127.0.0.1:8000/predict \
   -d '{"text":"4+4=8."}'
 ```
 
-Expected label:
+Example response:
 
-```text
-NEUTRAL
+```json
+{
+  "label": "NEUTRAL",
+  "score": 0.789
+}
 ```
 
-## Run tests
+---
+
+## Swagger Documentation
+
+FastAPI automatically provides interactive API documentation.
+
+Open
+
+```
+http://127.0.0.1:8000/docs
+```
+
+You can interactively test all API endpoints directly from your browser.
+
+---
+
+## ReDoc Documentation
+
+Alternatively, open
+
+```
+http://127.0.0.1:8000/redoc
+```
+
+for a more documentation-oriented view of the API.
+
+---
+
+## Stopping the Application
+
+Return to the terminal running Docker and press
+
+```text
+Ctrl + C
+```
+
+or stop the container from another terminal:
 
 ```bash
-python -m pytest tests/test_api.py -v
+docker ps
+docker stop <CONTAINER_ID>
 ```
-
-## Model
-
-This application uses:
-
-```text
-cardiffnlp/twitter-roberta-base-sentiment-latest
-```
-
-It predicts:
-
-- NEGATIVE
-- NEUTRAL
-- POSITIVE
