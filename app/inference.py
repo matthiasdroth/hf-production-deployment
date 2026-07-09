@@ -1,11 +1,10 @@
-from transformers import pipeline
-classifier = pipeline(
-    "sentiment-analysis",
-    model="distilbert-base-uncased-finetuned-sst-2-english",
-)
+from app.models import classifier
+
+
 def predict_sentiment(text: str) -> dict:
     result = classifier(text)[0]
+
     return {
-        "label": result["label"],
+        "label": result["label"].upper(),
         "score": float(result["score"]),
     }
